@@ -3,48 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --background: 210 40% 98%;
-  --foreground: 222.2 47.4% 11.2%;
+  --background: 260 38% 98%;
+  --foreground: 258 34% 14%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 47.4% 11.2%;
+  --card-foreground: 258 34% 14%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 47.4% 11.2%;
-  --primary: 180 100% 25%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 94%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 94%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 172 66% 50%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --popover-foreground: 258 34% 14%;
+  --primary: 268 79% 56%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 264 38% 94%;
+  --secondary-foreground: 258 34% 14%;
+  --muted: 260 34% 95%;
+  --muted-foreground: 256 16% 44%;
+  --accent: 276 76% 66%;
+  --accent-foreground: 258 34% 14%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 180 100% 25%;
+  --border: 262 28% 88%;
+  --input: 262 28% 88%;
+  --ring: 268 79% 56%;
   color-scheme: light;
 }
 
 .dark {
-  --background: 222.2 47.4% 7.2%;
+  --background: 256 28% 10%;
   --foreground: 210 40% 98%;
-  --card: 222.2 47.4% 10%;
+  --card: 257 26% 14%;
   --card-foreground: 210 40% 98%;
-  --popover: 222.2 47.4% 10%;
+  --popover: 257 26% 14%;
   --popover-foreground: 210 40% 98%;
-  --primary: 180 100% 40%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
+  --primary: 270 84% 70%;
+  --primary-foreground: 257 26% 14%;
+  --secondary: 257 18% 20%;
   --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 172 66% 50%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --muted: 257 18% 20%;
+  --muted-foreground: 247 18% 72%;
+  --accent: 279 74% 64%;
+  --accent-foreground: 257 26% 14%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 180 100% 40%;
+  --border: 257 15% 24%;
+  --input: 257 15% 24%;
+  --ring: 270 84% 70%;
   color-scheme: dark;
 }
 
@@ -60,15 +60,39 @@ body {
   @apply bg-background text-foreground antialiased;
   font-family: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
-  background-image: radial-gradient(circle at top, rgba(20, 184, 166, 0.12), transparent 30%), linear-gradient(180deg, rgba(255,255,255,0.55), transparent 35%);
+  background-image: radial-gradient(circle at top left, rgba(167, 139, 250, 0.22), transparent 34%), radial-gradient(circle at 85% 5%, rgba(196, 181, 253, 0.2), transparent 30%), linear-gradient(180deg, rgba(255,255,255,0.9), rgba(246,244,255,0.94));
+  font-size: 16px;
 }
 
 .dark body {
-  background-image: radial-gradient(circle at top, rgba(20, 184, 166, 0.18), transparent 30%), linear-gradient(180deg, rgba(15,23,42,0.75), transparent 35%);
+  background-image: radial-gradient(circle at top, rgba(167, 139, 250, 0.24), transparent 34%), linear-gradient(180deg, rgba(17, 10, 38, 0.85), rgba(10,14,27,0.95));
 }
 
 .glass-panel {
   @apply border border-white/20 bg-white/70 shadow-glow backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/60;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+.premium-text {
+  background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 45%, #a855f7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Slightly larger container spacing for readable layouts */
+.page-container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .section-grid {

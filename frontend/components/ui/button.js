@@ -7,9 +7,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow hover:brightness-110',
+        default: 'bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 text-primary-foreground shadow-sm shadow-violet-500/20 hover:brightness-105 hover:shadow-md hover:shadow-violet-500/30 active:translate-y-[0.5px]',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        outline: 'border border-border bg-background hover:bg-accent hover:text-accent-foreground',
+        outline: 'border border-border bg-white/80 hover:bg-accent/20 hover:text-accent-foreground dark:bg-slate-900/60',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         destructive: 'bg-destructive text-destructive-foreground hover:brightness-110'
       },
