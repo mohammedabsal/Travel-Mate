@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CalendarCheck2, Layers3, LineChart, MapPinned, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, CalendarCheck2, Globe2, LineChart, MapPinned, ShieldCheck, Sparkles, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,16 +33,22 @@ const testimonials = [
 ];
 
 const topDestinations = [
-  { name: 'Amalfi Coast', image: '/banner-placeholder.jpg', score: '4.9' },
-  { name: 'Kyoto', image: '/banner-placeholder.jpg', score: '4.8' },
-  { name: 'Lisbon', image: '/banner-placeholder.jpg', score: '4.7' },
-  { name: 'Reykjavik', image: '/banner-placeholder.jpg', score: '4.9' }
+  { name: 'Amalfi Coast', image: 'https://picsum.photos/id/1018/1200/800', score: '4.9' },
+  { name: 'Kyoto', image: 'https://picsum.photos/id/1033/1200/800', score: '4.8' },
+  { name: 'Lisbon', image: 'https://picsum.photos/id/1062/1200/800', score: '4.7' },
+  { name: 'Reykjavik', image: 'https://picsum.photos/id/1043/1200/800', score: '4.9' }
 ];
 
 const timelinePreview = [
   { day: 'Day 1', city: 'Berlin', detail: 'Boutique hotel check-in + museum pass pickup' },
   { day: 'Day 4', city: 'Prague', detail: 'Local food walk + riverside jazz evening' },
   { day: 'Day 8', city: 'Vienna', detail: 'Cultural district loop + designer cafe route' }
+];
+
+const tripSpotlights = [
+  { name: 'Santorini escape', image: 'https://picsum.photos/id/1011/900/700', note: 'Sunset ferry + cliffside stay' },
+  { name: 'Tokyo sprint', image: 'https://picsum.photos/id/1015/900/700', note: 'Food crawl + transit-friendly stays' },
+  { name: 'Swiss loop', image: 'https://picsum.photos/id/1043/900/700', note: 'Mountains, trains, and budget clarity' }
 ];
 
 export function HomePage({ destinations = [], recentTrips = [] }) {
@@ -139,17 +145,39 @@ export function HomePage({ destinations = [], recentTrips = [] }) {
       {/* Banner + Search Section (wireframe layout) */}
       <section className="mx-auto max-w-7xl px-6 pt-10 lg:px-10">
         <div className="rounded-2xl overflow-hidden bg-slate-800/70 shadow-lg">
-          <div className="h-44 bg-[url('/banner-placeholder.jpg')] bg-cover bg-center" />
+          <div className="h-44 bg-[url('https://picsum.photos/id/1015/1400/500')] bg-cover bg-center" />
           <div className="-mt-8 px-6 pb-6">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
               <input
                 aria-label="Search trips or places"
-                className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-sm shadow-sm"
+                className="w-full flex-1 rounded-lg border border-slate-600 bg-slate-950/80 px-4 py-3 text-sm text-white placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search bar ......"
               />
-              <button className="rounded-lg bg-white/90 px-3 py-2 text-sm">Group by</button>
-              <button className="rounded-lg bg-white/90 px-3 py-2 text-sm">Filter</button>
-              <button className="rounded-lg bg-white/90 px-3 py-2 text-sm">Sort by...</button>
+              <div className="flex flex-wrap items-center gap-3">
+                <select value={groupBy} onChange={(event) => setGroupBy(event.target.value)} className={toolbarSelectClass}>
+                  <option value="none">Group: none</option>
+                  <option value="status">Group: trip status</option>
+                  <option value="country">Group: destination country</option>
+                  <option value="first-stop">Group: first stop city</option>
+                </select>
+                <select value={filterBy} onChange={(event) => setFilterBy(event.target.value)} className={toolbarSelectClass}>
+                  <option value="all">Filter: all</option>
+                  <option value="active">Filter: active trips</option>
+                  <option value="draft">Filter: draft trips</option>
+                  <option value="completed">Filter: completed trips</option>
+                  <option value="budgeted">Filter: budgeted trips</option>
+                  <option value="image-only">Filter: with images</option>
+                </select>
+                <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className={toolbarSelectClass}>
+                  <option value="recommended">Sort: recommended</option>
+                  <option value="name-asc">Sort: name A-Z</option>
+                  <option value="city-asc">Sort: city A-Z</option>
+                  <option value="budget-desc">Sort: budget high-low</option>
+                  <option value="status">Sort: status</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -157,9 +185,24 @@ export function HomePage({ destinations = [], recentTrips = [] }) {
         {/* Top Regional Selections */}
         <div className="mt-6">
           <h3 className="mb-3 text-lg font-semibold">Top Regional Selections</h3>
-          <div className="flex gap-4">
-            {[1,2,3,4,5].map((i) => (
-              <div key={i} className="h-28 w-28 rounded-lg bg-white/80 shadow-sm" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {topDestinations.map((destination) => (
+              <div key={destination.name} className="overflow-hidden rounded-2xl border border-white/60 bg-white/80 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-950/60">
+                <div className="relative h-32">
+                  <img src={destination.image} alt={destination.name} className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+                </div>
+                <div className="flex items-center justify-between px-4 py-3">
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">{destination.name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Regional highlight</p>
+                  </div>
+                  <div className="inline-flex items-center gap-1 rounded-full bg-slate-950 px-2.5 py-1 text-xs font-semibold text-white dark:bg-white dark:text-slate-950">
+                    <Star className="h-3.5 w-3.5 fill-current text-amber-400" />
+                    {destination.score}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -167,9 +210,18 @@ export function HomePage({ destinations = [], recentTrips = [] }) {
         {/* Previous Trips */}
         <div className="mt-8 relative">
           <h3 className="mb-3 text-lg font-semibold">Previous Trips</h3>
-          <div className="grid grid-cols-3 gap-4">
-            {[1,2,3].map((i) => (
-              <div key={i} className="h-56 rounded-xl bg-white/80 shadow"> </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {tripSpotlights.map((trip) => (
+              <div key={trip.name} className="overflow-hidden rounded-[1.5rem] border border-white/60 bg-white/85 shadow-lg dark:border-white/10 dark:bg-slate-950/65">
+                <div className="relative h-56">
+                  <img src={trip.image} alt={trip.name} className="h-full w-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="text-lg font-semibold text-white">{trip.name}</p>
+                    <p className="text-sm text-white/80">{trip.note}</p>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
           <button className="absolute bottom-0 right-0 mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white">+ Plan a trip</button>

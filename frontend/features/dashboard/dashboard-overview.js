@@ -1,7 +1,10 @@
 "use client";
 
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Calendar, MapPinned, Wallet, Sparkles } from 'lucide-react';
+import { ArrowRight, Calendar, Clock3, MapPinned, Route, Sparkles, Wallet } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { AreaChart, Area, BarChart, Bar, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
