@@ -1,5 +1,9 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { getAvatarImage, getTripImage } from '@/lib/image-fallback';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProfileForm } from '@/features/profile/profile-form';
@@ -10,6 +14,15 @@ export default async function ProfilePage() {
   const session = await auth();
 
   if (!session?.user) redirect('/login');
+
+  const trips = await prisma.trip.findMany({
+    where: { ownerId: session.user.id },
+    orderBy: { startDate: 'desc' },
+    take: 6
+  });
+
+  const preplannedTrips = trips.filter((trip) => trip.status !== 'COMPLETED').slice(0, 3);
+  const previousTrips = trips.filter((trip) => trip.status === 'COMPLETED').slice(0, 3);
 
   return (
     <AppShell>
@@ -22,7 +35,7 @@ export default async function ProfilePage() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={session.user.image} alt="avatar" className="w-full h-full object-cover" />
               ) : (
-                <div className="flex h-full items-center justify-center text-muted-foreground">Image of the User</div>
+                <Image src={getAvatarImage(session.user.name ?? session.user.email)} alt="avatar" width={160} height={160} className="h-full w-full object-cover" />
               )}
             </div>
           </div>
@@ -45,37 +58,46 @@ export default async function ProfilePage() {
           <section>
             <h3 className="mb-4 text-2xl font-semibold">Preplanned Trips</h3>
             <div className="grid grid-cols-3 gap-4">
-              {/* Placeholder trip cards - wired to real data later */}
-              {[1,2,3].map((i) => (
-                <div key={i} className="rounded-lg border border-border p-4">
-                  <div className="h-36 bg-background rounded-md mb-4" />
+              {preplannedTrips.map((trip) => (
+                <Link key={trip.id} href={`/trips/${trip.id}`} className="rounded-lg border border-border p-3 transition hover:shadow-md">
+                  <div className="relative mb-3 h-36 overflow-hidden rounded-md">
+                    <Image src={getTripImage(trip)} alt={trip.title} fill sizes="(max-width: 1024px) 33vw, 280px" className="object-cover" />
+                  </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Trip {i}</p>
-                      <p className="text-sm text-muted-foreground">Short description of planned trip</p>
+                      <p className="font-medium">{trip.title}</p>
+                      <p className="text-sm text-muted-foreground">{new Date(trip.startDate).toLocaleDateString()}</p>
                     </div>
-                    <a href="#" className="rounded-md bg-primary px-3 py-1 text-white">View</a>
+                    <span className="rounded-md bg-primary px-3 py-1 text-white">View</span>
                   </div>
-                </div>
+                </Link>
               ))}
+              {!preplannedTrips.length && (
+                <div className="col-span-3 rounded-lg border border-dashed border-border p-5 text-sm text-muted-foreground">No preplanned trips yet.</div>
+              )}
             </div>
           </section>
 
           <section>
             <h3 className="mb-4 text-2xl font-semibold">Previous Trips</h3>
             <div className="grid grid-cols-3 gap-4">
-              {[1,2,3].map((i) => (
-                <div key={i} className="rounded-lg border border-border p-4">
-                  <div className="h-36 bg-background rounded-md mb-4" />
+              {previousTrips.map((trip) => (
+                <Link key={trip.id} href={`/trips/${trip.id}`} className="rounded-lg border border-border p-3 transition hover:shadow-md">
+                  <div className="relative mb-3 h-36 overflow-hidden rounded-md">
+                    <Image src={getTripImage(trip)} alt={trip.title} fill sizes="(max-width: 1024px) 33vw, 280px" className="object-cover" />
+                  </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium">Trip {i + 3}</p>
-                      <p className="text-sm text-muted-foreground">Short overview of the trip</p>
+                      <p className="font-medium">{trip.title}</p>
+                      <p className="text-sm text-muted-foreground">Completed {new Date(trip.endDate).toLocaleDateString()}</p>
                     </div>
-                    <a href="#" className="rounded-md bg-primary px-3 py-1 text-white">View</a>
+                    <span className="rounded-md bg-primary px-3 py-1 text-white">View</span>
                   </div>
-                </div>
+                </Link>
               ))}
+              {!previousTrips.length && (
+                <div className="col-span-3 rounded-lg border border-dashed border-border p-5 text-sm text-muted-foreground">No previous trips yet.</div>
+              )}
             </div>
           </section>
         </div>

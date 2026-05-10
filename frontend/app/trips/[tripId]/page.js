@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
+import Image from 'next/image';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { getTripImage, picsumBySeed } from '@/lib/image-fallback';
 import { AppShell } from '@/components/layout/app-shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export async function generateMetadata({ params }) {
-  const trip = await prisma.trip.findUnique({ where: { id: params.tripId } });
+  const { tripId } = await params;
+  const trip = await prisma.trip.findUnique({ where: { id: tripId } });
 
   if (!trip) {
     return { title: 'Trip not found' };
@@ -21,6 +24,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function TripDetailPage({ params }) {
+  const { tripId } = await params;
   const session = await auth();
 
   if (!session?.user) {
@@ -28,7 +32,7 @@ export default async function TripDetailPage({ params }) {
   }
 
   const trip = await prisma.trip.findFirst({
-    where: { id: params.tripId, ownerId: session.user.id },
+    where: { id: tripId, ownerId: session.user.id },
     include: {
       stops: { orderBy: { order: 'asc' } },
       budget: true,
@@ -44,10 +48,18 @@ export default async function TripDetailPage({ params }) {
   return (
     <AppShell>
       <div className="space-y-6">
-        <Card className="rounded-[2rem] overflow-hidden">
+        <Card className="overflow-hidden rounded-[2rem]">
+          <div className="relative h-56 w-full md:h-72">
+            <Image src={getTripImage(trip)} alt={trip.title} fill sizes="100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
+            <div className="absolute bottom-5 left-6 text-white">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/70">{trip.visibility.toLowerCase()}</p>
+              <h1 className="text-4xl font-semibold">{trip.title}</h1>
+            </div>
+          </div>
           <CardHeader>
-            <CardDescription>{trip.visibility.toLowerCase()}</CardDescription>
-            <CardTitle className="text-4xl">{trip.title}</CardTitle>
+            <CardDescription>Navigate your itinerary, budget, checklist, and journal</CardDescription>
+            <CardTitle className="text-2xl">Trip Workspace</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap items-center gap-3">
             <Button asChild variant="outline"><Link href={`/trips/${trip.id}/itinerary`}>Itinerary</Link></Button>
@@ -83,7 +95,10 @@ export default async function TripDetailPage({ params }) {
               </CardHeader>
               <CardContent className="space-y-3">
                 {trip.stops.map((stop) => (
-                  <div key={stop.id} className="flex items-center justify-between rounded-2xl border border-border p-4">
+                  <div key={stop.id} className="grid items-center gap-3 rounded-2xl border border-border p-3 md:grid-cols-[120px_1fr_auto]">
+                    <div className="relative h-20 overflow-hidden rounded-xl">
+                      <Image src={picsumBySeed(`${stop.city}-${stop.country}`, 500, 300)} alt={stop.city} fill sizes="120px" className="object-cover" />
+                    </div>
                     <div>
                       <p className="font-medium">{stop.city}</p>
                       <p className="text-sm text-muted-foreground">{stop.country}</p>

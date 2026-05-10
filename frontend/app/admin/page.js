@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { picsumBySeed } from '@/lib/image-fallback';
 
 export default function AdminPanelPage() {
   const [query, setQuery] = useState('');
@@ -52,34 +54,23 @@ export default function AdminPanelPage() {
                 </div>
 
                 <div className="mb-6">
-                  {/* Pie chart placeholder */}
-                  <div className="h-40 w-40 rounded-full bg-sky-400" />
+                  <div className="relative h-40 w-40 overflow-hidden rounded-full border border-border">
+                    <Image src={picsumBySeed('admin-popular-cities', 600, 600)} alt="Popular cities" fill sizes="160px" className="object-cover" />
+                  </div>
                 </div>
 
                 <div>
-                  {/* Bar chart */}
-                  <div className="h-24 w-full rounded bg-orange-200 flex items-end gap-2 p-3">
-                    <div className="h-16 w-8 bg-orange-400" />
-                    <div className="h-20 w-8 bg-orange-400" />
-                    <div className="h-12 w-8 bg-orange-400" />
+                  <div className="relative h-24 w-full overflow-hidden rounded">
+                    <Image src={picsumBySeed('admin-activity-bars', 1200, 400)} alt="Activity trends" fill sizes="420px" className="object-cover" />
+                    <div className="absolute inset-0 bg-orange-500/25" />
                   </div>
                 </div>
               </div>
 
               <div>
-                {/* Line chart */}
-                <div className="mb-6 h-64 w-full rounded bg-gray-100">
-                  <svg viewBox="0 0 200 80" className="w-full h-full">
-                    <polyline fill="none" stroke="#ff4d4f" strokeWidth="4" points="10,60 40,40 70,50 100,30 130,40 160,35 190,45" />
-                    {/** dots **/}
-                    <circle cx="10" cy="60" r="3" fill="#ff4d4f" />
-                    <circle cx="40" cy="40" r="3" fill="#ff4d4f" />
-                    <circle cx="70" cy="50" r="3" fill="#ff4d4f" />
-                    <circle cx="100" cy="30" r="3" fill="#ff4d4f" />
-                    <circle cx="130" cy="40" r="3" fill="#ff4d4f" />
-                    <circle cx="160" cy="35" r="3" fill="#ff4d4f" />
-                    <circle cx="190" cy="45" r="3" fill="#ff4d4f" />
-                  </svg>
+                <div className="relative mb-6 h-64 w-full overflow-hidden rounded">
+                  <Image src={picsumBySeed('admin-growth-lines', 1400, 700)} alt="User trends" fill sizes="560px" className="object-cover" />
+                  <div className="absolute inset-0 bg-slate-900/30" />
                 </div>
 
                 <div className="space-y-3">

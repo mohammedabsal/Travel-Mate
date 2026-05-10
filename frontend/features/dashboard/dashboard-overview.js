@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Calendar, MapPinned, Wallet, Sparkles } from 'lucide-react';
+import { picsumBySeed } from '@/lib/image-fallback';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,6 +16,19 @@ const cards = [
 export function DashboardOverview() {
   return (
     <div className="space-y-8">
+      <Card className="overflow-hidden rounded-[2rem] border-white/40 bg-white/70 backdrop-blur dark:bg-slate-950/60">
+        <CardContent className="grid gap-0 p-0 md:grid-cols-[1.1fr_0.9fr]">
+          <div className="p-8">
+            <p className="text-sm uppercase tracking-[0.28em] text-primary">Travel pulse</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Your next city is waiting for a plan.</h2>
+            <p className="mt-3 max-w-xl text-muted-foreground">Fresh destination visuals and activity trends keep the dashboard lively while you build itineraries.</p>
+          </div>
+          <div className="relative h-56 md:h-full">
+            <Image src={picsumBySeed('dashboard-hero', 1400, 900)} alt="Travel dashboard hero" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" />
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => {
           const Icon = card.icon;

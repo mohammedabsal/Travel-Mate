@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { getTripImage } from '@/lib/image-fallback';
 import { AppShell } from '@/components/layout/app-shell';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 export const metadata = {
@@ -59,19 +61,24 @@ export default async function TripsPage() {
           <div className="space-y-4">
             {ongoing.length ? (
               ongoing.map((trip) => (
-                <Card key={trip.id} className="rounded-lg">
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{trip.title}</p>
-                        <p className="text-sm text-muted-foreground">{trip.stops.length} stops · {trip.currency} {trip.budget?.totalPlanned ?? 0}</p>
+                <Link key={trip.id} href={`/trips/${trip.id}`}>
+                  <Card className="overflow-hidden rounded-xl transition hover:shadow-lg">
+                    <CardContent className="p-0">
+                      <div className="grid md:grid-cols-[220px_1fr]">
+                        <div className="relative h-40 md:h-full">
+                          <Image src={getTripImage(trip)} alt={trip.title} fill sizes="220px" className="object-cover" />
+                        </div>
+                        <div className="flex items-center justify-between p-5">
+                          <div>
+                            <p className="font-semibold">{trip.title}</p>
+                            <p className="text-sm text-muted-foreground">{trip.stops.length} stops · {trip.currency} {trip.budget?.totalPlanned ?? 0}</p>
+                          </div>
+                          <span className="text-sm font-medium text-primary">Open</span>
+                        </div>
                       </div>
-                      <div>
-                        <Link href={`/trips/${trip.id}`} className="text-sm text-primary">Open</Link>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))
             ) : (
               <div className="rounded-lg border border-dashed border-border p-6 text-muted-foreground">No ongoing trips</div>
@@ -84,19 +91,24 @@ export default async function TripsPage() {
           <div className="space-y-4">
             {upcoming.length ? (
               upcoming.map((trip) => (
-                <Card key={trip.id} className="rounded-lg">
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{trip.title}</p>
-                        <p className="text-sm text-muted-foreground">Starts {new Date(trip.startDate).toLocaleDateString()} · {trip.stops.length} stops</p>
+                <Link key={trip.id} href={`/trips/${trip.id}`}>
+                  <Card className="overflow-hidden rounded-xl transition hover:shadow-lg">
+                    <CardContent className="p-0">
+                      <div className="grid md:grid-cols-[220px_1fr]">
+                        <div className="relative h-40 md:h-full">
+                          <Image src={getTripImage(trip)} alt={trip.title} fill sizes="220px" className="object-cover" />
+                        </div>
+                        <div className="flex items-center justify-between p-5">
+                          <div>
+                            <p className="font-semibold">{trip.title}</p>
+                            <p className="text-sm text-muted-foreground">Starts {new Date(trip.startDate).toLocaleDateString()} · {trip.stops.length} stops</p>
+                          </div>
+                          <span className="text-sm font-medium text-primary">Open</span>
+                        </div>
                       </div>
-                      <div>
-                        <Link href={`/trips/${trip.id}`} className="text-sm text-primary">Open</Link>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))
             ) : (
               <div className="rounded-lg border border-dashed border-border p-6 text-muted-foreground">No upcoming trips</div>
@@ -109,19 +121,24 @@ export default async function TripsPage() {
           <div className="space-y-4">
             {completed.length ? (
               completed.map((trip) => (
-                <Card key={trip.id} className="rounded-lg">
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{trip.title}</p>
-                        <p className="text-sm text-muted-foreground">Completed {new Date(trip.endDate).toLocaleDateString()}</p>
+                <Link key={trip.id} href={`/trips/${trip.id}`}>
+                  <Card className="overflow-hidden rounded-xl transition hover:shadow-lg">
+                    <CardContent className="p-0">
+                      <div className="grid md:grid-cols-[220px_1fr]">
+                        <div className="relative h-40 md:h-full">
+                          <Image src={getTripImage(trip)} alt={trip.title} fill sizes="220px" className="object-cover" />
+                        </div>
+                        <div className="flex items-center justify-between p-5">
+                          <div>
+                            <p className="font-semibold">{trip.title}</p>
+                            <p className="text-sm text-muted-foreground">Completed {new Date(trip.endDate).toLocaleDateString()}</p>
+                          </div>
+                          <span className="text-sm font-medium text-primary">Open</span>
+                        </div>
                       </div>
-                      <div>
-                        <Link href={`/trips/${trip.id}`} className="text-sm text-primary">Open</Link>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))
             ) : (
               <div className="rounded-lg border border-dashed border-border p-6 text-muted-foreground">No completed trips</div>

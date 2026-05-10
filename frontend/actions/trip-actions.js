@@ -208,3 +208,94 @@ export async function addTripStopAction(values) {
   revalidatePath(`/trips/${parsed.data.tripId}/itinerary`);
   return { ok: true, stop };
 }
+
+export async function getRecentTripsAction(limit = 3) {
+  try {
+    const session = await auth();
+    
+    if (!session?.user?.id) {
+      return [];
+    }
+
+    const trips = await prisma.trip.findMany({
+      where: {
+        ownerId: session.user.id
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        coverImageUrl: true,
+        startDate: true,
+        endDate: true,
+        status: true,
+        visibility: true,
+        currency: true,
+        budget: {
+          select: {
+            totalSpent: true,
+            totalPlanned: true
+          }
+        },
+        stops: {
+          select: {
+            city: true,
+            country: true
+          },
+          take: 3
+        }
+      },
+      orderBy: {
+        startDate: 'desc'
+      },
+      take: limit
+    });
+
+    return trips;
+  } catch (error) {
+    console.error('Error fetching recent trips:', error);
+    return [];
+  }
+}
+
+export async function getPublicRecentTripsAction(limit = 3) {
+  try {
+    const trips = await prisma.trip.findMany({
+      where: {
+        visibility: 'PUBLIC'
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        coverImageUrl: true,
+        startDate: true,
+        endDate: true,
+        status: true,
+        currency: true,
+        budget: {
+          select: {
+            totalSpent: true,
+            totalPlanned: true
+          }
+        },
+        stops: {
+          select: {
+            city: true,
+            country: true
+          },
+          take: 3
+        }
+      },
+      orderBy: {
+        startDate: 'desc'
+      },
+      take: limit
+    });
+
+    return trips;
+  } catch (error) {
+    console.error('Error fetching public recent trips:', error);
+    return [];
+  }
+}
