@@ -83,8 +83,9 @@ async function main() {
     }
   });
 
-  const trip = await prisma.trip.create({
-    data: {
+  const trip = await prisma.trip.upsert({
+    where: { shareSlug: 'demo' },
+    update: {
       ownerId: user.id,
       title: 'Europe Summer Loop',
       description: 'A three-city route with time for museums, food, and slow mornings.',
@@ -93,7 +94,19 @@ async function main() {
       endDate: new Date('2026-07-22'),
       status: 'ACTIVE',
       visibility: 'PUBLIC',
-      shareSlug: 'eu-summer-loop',
+      currency: 'EUR',
+      budgetTarget: new Prisma.Decimal('4860.00')
+    },
+    create: {
+      ownerId: user.id,
+      title: 'Europe Summer Loop',
+      description: 'A three-city route with time for museums, food, and slow mornings.',
+      coverImageUrl: 'https://images.unsplash.com/photo-1488747279002-c8523379faaa?auto=format&fit=crop&w=1600&q=80',
+      startDate: new Date('2026-07-10'),
+      endDate: new Date('2026-07-22'),
+      status: 'ACTIVE',
+      visibility: 'PUBLIC',
+      shareSlug: 'demo',
       currency: 'EUR',
       budgetTarget: new Prisma.Decimal('4860.00'),
       budget: {
@@ -111,7 +124,7 @@ async function main() {
       },
       sharedTrip: {
         create: {
-          slug: 'eu-summer-loop',
+          slug: 'demo',
           isPublic: true
         }
       },
@@ -148,6 +161,7 @@ async function main() {
   }
 
   console.log(`Seeded user ${user.email} and trip ${trip.title}`);
+  console.log(`View shared trip at: /share/demo`);
 }
 
 main()

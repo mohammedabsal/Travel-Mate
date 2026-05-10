@@ -24,7 +24,12 @@ export async function signupAction(values) {
     data: {
       name: parsed.data.name,
       email: parsed.data.email,
-      passwordHash
+      passwordHash,
+      phone: parsed.data.phone || null,
+      city: parsed.data.city || null,
+      country: parsed.data.country || null,
+      bio: parsed.data.bio || null,
+      image: parsed.data.image || null
     }
   });
 

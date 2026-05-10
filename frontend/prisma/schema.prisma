@@ -36,6 +36,9 @@ model User {
   emailVerified    DateTime?
   image            String?
   passwordHash     String?
+  phone            String?
+  city             String?
+  country          String?
   role             String            @default("USER")
   locale           String            @default("en")
   currency         String            @default("USD")

@@ -52,14 +52,29 @@ export function TripForm({ defaultValues }) {
           <Input type="number" min="0" step="0.01" placeholder="5000" {...register('budgetTarget')} />
         </div>
       </div>
-
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <label className="text-sm font-medium">Start date</label>
           <Input type="date" {...register('startDate')} />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium">End date</label>
+          <label className="text-sm font-medium">Select a Place</label>
+          <select className="flex h-11 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm" {...register('destinationId')}>
+            <option value="">Choose a place...</option>
+            <option value="dest_berlin">Berlin</option>
+            <option value="dest_prague">Prague</option>
+            <option value="dest_vienna">Vienna</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Arrival / Start Date</label>
+          <Input type="date" {...register('startDate')} />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">End Date</label>
           <Input type="date" {...register('endDate')} />
         </div>
       </div>
@@ -88,7 +103,17 @@ export function TripForm({ defaultValues }) {
         </div>
       </div>
 
-      <Button type="submit" size="lg" disabled={isPending}>
+      {/* Suggestions for Places / Activities */}
+      <div className="mt-6">
+        <h4 className="mb-3 text-lg font-medium">Suggestion for Places to Visit/Activities to perform</h4>
+        <div className="grid grid-cols-3 gap-4">
+          {[1,2,3,4,5,6].map((i) => (
+            <div key={i} className="h-36 rounded-lg border border-border bg-background p-3">Suggestion {i}</div>
+          ))}
+        </div>
+      </div>
+
+      <Button type="submit" size="lg" disabled={isPending} className="mt-6">
         {isPending ? 'Creating trip...' : 'Create trip'}
       </Button>
     </form>

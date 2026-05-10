@@ -22,34 +22,112 @@ export default async function TripsPage() {
     orderBy: { startDate: 'asc' },
     include: { budget: true, stops: { orderBy: { order: 'asc' } } }
   });
+  // categorize trips into ongoing, upcoming, completed
+  const now = new Date();
+  const ongoing = [];
+  const upcoming = [];
+  const completed = [];
+
+  for (const trip of trips) {
+    const start = new Date(trip.startDate);
+    const end = new Date(trip.endDate);
+
+    if (trip.status === 'COMPLETED' || end < now) {
+      completed.push(trip);
+    } else if (trip.status === 'ACTIVE' && start <= now && end >= now) {
+      ongoing.push(trip);
+    } else {
+      upcoming.push(trip);
+    }
+  }
 
   return (
     <AppShell>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-semibold tracking-tight">Trips</h2>
-          <p className="text-muted-foreground">Manage your itineraries, budgets, and collaboration links.</p>
+          <p className="text-muted-foreground">Search, group, and manage your trips.</p>
         </div>
         <Button asChild>
-          <Link href="/trips/new">Create trip</Link>
+          <Link href="/trips/new">Plan a trip</Link>
         </Button>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {trips.map((trip) => (
-          <Card key={trip.id} className="rounded-[1.75rem]">
-            <CardHeader>
-              <CardDescription>{trip.visibility.toLowerCase()}</CardDescription>
-              <CardTitle>{trip.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">{trip.stops.length} stops · {trip.currency} {trip.budget?.totalPlanned ?? 0}</p>
-              <Button asChild variant="outline" className="w-full">
-                <Link href={`/trips/${trip.id}`}>Open trip</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-10">
+        <section>
+          <h3 className="mb-4 text-2xl font-semibold">Ongoing</h3>
+          <div className="space-y-4">
+            {ongoing.length ? (
+              ongoing.map((trip) => (
+                <Card key={trip.id} className="rounded-lg">
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{trip.title}</p>
+                        <p className="text-sm text-muted-foreground">{trip.stops.length} stops · {trip.currency} {trip.budget?.totalPlanned ?? 0}</p>
+                      </div>
+                      <div>
+                        <Link href={`/trips/${trip.id}`} className="text-sm text-primary">Open</Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="rounded-lg border border-dashed border-border p-6 text-muted-foreground">No ongoing trips</div>
+            )}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="mb-4 text-2xl font-semibold">Upcoming</h3>
+          <div className="space-y-4">
+            {upcoming.length ? (
+              upcoming.map((trip) => (
+                <Card key={trip.id} className="rounded-lg">
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{trip.title}</p>
+                        <p className="text-sm text-muted-foreground">Starts {new Date(trip.startDate).toLocaleDateString()} · {trip.stops.length} stops</p>
+                      </div>
+                      <div>
+                        <Link href={`/trips/${trip.id}`} className="text-sm text-primary">Open</Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="rounded-lg border border-dashed border-border p-6 text-muted-foreground">No upcoming trips</div>
+            )}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="mb-4 text-2xl font-semibold">Completed</h3>
+          <div className="space-y-4">
+            {completed.length ? (
+              completed.map((trip) => (
+                <Card key={trip.id} className="rounded-lg">
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{trip.title}</p>
+                        <p className="text-sm text-muted-foreground">Completed {new Date(trip.endDate).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <Link href={`/trips/${trip.id}`} className="text-sm text-primary">Open</Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="rounded-lg border border-dashed border-border p-6 text-muted-foreground">No completed trips</div>
+            )}
+          </div>
+        </section>
       </div>
     </AppShell>
   );

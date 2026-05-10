@@ -34,6 +34,45 @@ const testimonials = [
 export function HomePage() {
   return (
     <div className="relative overflow-hidden">
+      {/* Banner + Search Section (wireframe layout) */}
+      <section className="mx-auto max-w-7xl px-6 pt-10 lg:px-10">
+        <div className="rounded-2xl overflow-hidden bg-slate-800/70 shadow-lg">
+          <div className="h-44 bg-[url('/banner-placeholder.jpg')] bg-cover bg-center" />
+          <div className="-mt-8 px-6 pb-6">
+            <div className="flex items-center gap-3">
+              <input
+                aria-label="Search trips or places"
+                className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-sm shadow-sm"
+                placeholder="Search bar ......"
+              />
+              <button className="rounded-lg bg-white/90 px-3 py-2 text-sm">Group by</button>
+              <button className="rounded-lg bg-white/90 px-3 py-2 text-sm">Filter</button>
+              <button className="rounded-lg bg-white/90 px-3 py-2 text-sm">Sort by...</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Top Regional Selections */}
+        <div className="mt-6">
+          <h3 className="mb-3 text-lg font-semibold">Top Regional Selections</h3>
+          <div className="flex gap-4">
+            {[1,2,3,4,5].map((i) => (
+              <div key={i} className="h-28 w-28 rounded-lg bg-white/80 shadow-sm" />
+            ))}
+          </div>
+        </div>
+
+        {/* Previous Trips */}
+        <div className="mt-8 relative">
+          <h3 className="mb-3 text-lg font-semibold">Previous Trips</h3>
+          <div className="grid grid-cols-3 gap-4">
+            {[1,2,3].map((i) => (
+              <div key={i} className="h-56 rounded-xl bg-white/80 shadow"> </div>
+            ))}
+          </div>
+          <button className="absolute bottom-0 right-0 mt-6 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-white">+ Plan a trip</button>
+        </div>
+      </section>
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,rgba(13,148,136,0.18),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(56,189,248,0.12),transparent_30%)]" />
       <section className="mx-auto grid min-h-[88vh] max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:px-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

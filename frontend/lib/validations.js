@@ -1,9 +1,15 @@
 import { z } from 'zod';
 
 export const signupSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
+  firstName: z.string().min(2, 'First name is required'),
+  lastName: z.string().min(2, 'Last name is required'),
   email: z.string().email('Enter a valid email'),
-  password: z.string().min(8, 'Use at least 8 characters')
+  password: z.string().min(8, 'Use at least 8 characters'),
+  phone: z.string().optional().or(z.literal('')),
+  city: z.string().min(2, 'City is required'),
+  country: z.string().min(2, 'Country is required'),
+  bio: z.string().optional().or(z.literal('')),
+  image: z.string().url().optional().or(z.literal(''))
 });
 
 export const loginSchema = z.object({
