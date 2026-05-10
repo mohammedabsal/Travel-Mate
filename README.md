@@ -53,7 +53,3 @@ Contributing
 - Follow the existing code patterns in `frontend/app` and `features`.
 - Keep `node_modules` out of source control.
 
-License
-- This project scaffold is provided for development and learning. Add a license file if you intend to publish.
-
-If you want the README expanded with architecture diagrams, deployment steps, or CI instructions, tell me which sections to add and I will extend it.
